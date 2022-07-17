@@ -26,7 +26,7 @@ sudo timedatectl set-timezone $SYSTEM_TIMEZONE
 echo "INSTALLER: System time zone set to $SYSTEM_TIMEZONE"
 
 # Install Oracle Database prereq and openssl packages
-yum install -y oracle-database-preinstall-19c openssl
+yum install -y oracle-database-preinstall-21c openssl
 
 echo 'INSTALLER: Oracle preinstall and openssl complete'
 
@@ -190,10 +190,10 @@ sudo systemctl start oracle-rdbms
 echo "INSTALLER: Created and enabled oracle-rdbms systemd's service"
 
 echo 'INSTALLER: Started GG installation'
-  #oracle-goldengate-1910-vagrant: ORACLE PASSWORD FOR SYS, SYSTEM AND PDBADMIN: 8t8aUcnLhAE=1
+  #oracle-goldengate-2130-vagrant: ORACLE PASSWORD FOR SYS, SYSTEM AND PDBADMIN: 8t8aUcnLhAE=1
 # Install Golden Gate For Oracle
 sudo unzip /vagrant/$ORACLE_GG_SETUP_FILE -d /u01/ogg-installer
-sudo chown 
+sudo chown oracle:oinstall -R /u01/ogg-installer
 cp /vagrant/ora-response/ogg_install.rsp.tmpl /tmp/oggresponse.rsp
 sed -i -e "s|###ORACLE_BASE###|$ORACLE_BASE|g" /tmp/oggresponse.rsp
 sed -i -e "s|###ORACLE_HOME###|$ORACLE_HOME|g" /tmp/oggresponse.rsp
@@ -201,7 +201,7 @@ sed -i -e "s|###ORACLE_HOME###|$ORACLE_HOME|g" /tmp/oggresponse.rsp
 chown oracle:oinstall -R /u01/ogg-installer
 chown oracle:oinstall -R /u01/ogg
 
-su -l oracle -c "/u01/ogg-installer/fbo_ggs_Linux_x64_shiphome/Disk1/runInstaller -silent -waitforcompletion -responseFile /tmp/oggresponse.rsp"
+su -l oracle -c "/u01/ogg-installer/fbo_ggs_Linux_x64_Oracle_shiphome/Disk1/runInstaller -silent -waitforcompletion -responseFile /tmp/oggresponse.rsp"
 echo "export LD_LIBRARY_PATH=\$ORACLE_HOME/lib:/lib:/usr/lib" >> /home/oracle/.bashrc
 rm -rf /u01/ogg-installer
 rm /tmp/oggresponse.rsp
@@ -211,7 +211,7 @@ echo 'INSTALLER: Oracle Golden Gate Installed'
 # Install Golden Gate For Big Data
 echo 'Installer: Install GG for Big Data'
 unzip /vagrant/$ORACLE_GG_BD_SETUP_FILE -d /tmp/oggbd
-sudo tar -xvf /tmp/oggbd/*BigData_Linux*.tar -C /u01/oggbd/
+sudo tar -xvf /tmp/oggbd/*BigData_*.tar -C /u01/oggbd/
 rm -rf /tmp/oggbd
 chown -R oracle:oinstall /u01/oggbd/
 echo 'INSTALLER: Oracle GG For Big Data Installed.'

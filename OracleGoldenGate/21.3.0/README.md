@@ -1,4 +1,4 @@
-# oracle19c-gg-vagrant
+# oracle21c-gg-vagrant
 
 A Vagrant project that provisions Oracle Database along with Golden Gate automatically, using Vagrant, an Oracle Linux 7 box, and a shell script.
 
@@ -11,8 +11,8 @@ A Vagrant project that provisions Oracle Database along with Golden Gate automat
 
 1. Clone this repository `git clone https://github.com/oracle/vagrant-projects`
 2. Change into the desired version folder
-3. Download the Oracle 19c Database (LINUX.X64_193000_db_home.zip) installation zip files from oracle edelivery into this folder - first time only: [edelivery](https://www.oracle.com/database/technologies/oracle-database-software-downloads.html#19c)
-4. Download the installation zip for golden gate (191004_fbo_ggs_Linux_x64_shiphome.zip) & golden gate for Big Data (OGG_BigData_Linux_x64_19.1.0.0.1) into this folder - first time only: [edelivery](https://www.oracle.com/middleware/technologies/goldengate-downloads.html)
+3. Download the Oracle 21c Database (LINUX.X64_213000_db_home.zip) installation zip files from oracle edelivery into this folder - first time only: [edelivery](https://www.oracle.com/database/technologies/oracle-database-software-downloads.html#21c)
+4. Download the installation zip for golden gate (213000_fbo_ggs_Linux_x64_Oracle_shiphome.zip) & golden gate for Big Data (214000_ggs_Linux_x64_BigData_64bit.zip) into this folder - first time only: [edelivery](https://www.oracle.com/middleware/technologies/goldengate-downloads.html)
 5. Run `vagrant up`
    1. The first time you run this it will provision everything and may take a while. Ensure you have (a good) internet connection as the scripts will update the virtual box to the latest via `yum`.
    2. The Vagrant file allows for customization, if desired (see [Customization](#customization))
@@ -53,7 +53,7 @@ You can customize your Oracle environment by amending the environment variables 
 The following can be customized:
 
 - `ORACLE_BASE`: `/opt/oracle/`
-- `ORACLE_HOME`: `/opt/oracle/product/12.2.0.1/dbhome_1`
+- `ORACLE_HOME`: `/opt/oracle/product/21c/dbhome_1`
 - `ORACLE_SID`: `ORCLCDB`
 - `ORACLE_PDB`: `ORCLPDB1`
 - `ORACLE_CHARACTERSET`: `AL32UTF8`
@@ -61,9 +61,9 @@ The following can be customized:
 - `ORACLE_PWD`: `auto generated`
 - `JAVA_VERSION`: `1.8.0`
 - `SCALA_VERSION`: `2.12`
-- `KAFKA_VERSION`: `2.6.0`
+- `KAFKA_VERSION`: `2.8.1`
 - `APACHE_ZOOKEEPER_PORT`: `2181`
 - `APACHE_KAFKA_PORT`: `9092`
-- `ORACLE_DB_SETUP_FIL`: `linux*122*.zip`
+- `ORACLE_DB_SETUP_FILE`: `LINUX.X64_213000_db_home.zip`
 - `ORACLE_GG_SETUP_FILE`: `*ggs_Linux*.zip`
-- `ORACLE_GG_BD_SETUP_FILE`: `*BigData_Linux*.zip`
+- `ORACLE_GG_BD_SETUP_FILE`: `*Linux*BigData*.zip`
