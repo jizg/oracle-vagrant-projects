@@ -76,7 +76,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   VM_SCALA_VERSION = default_s('VM_SCALA_VERSION', '2.12')
   
   # Apache Kafka Version
-  VM_APACHE_KAFKA_VERSION = default_s('VM_APACHE_KAFKA_VERSION', '2.6.0')
+  VM_APACHE_KAFKA_VERSION = default_s('VM_APACHE_KAFKA_VERSION', '2.8.1')
 
   # Apache Zookeeper port
   VM_APACHE_ZOOKEEPER_PORT = default_i('VM_APACHE_ZOOKEEPER_PORT', 2181)
@@ -85,7 +85,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   VM_APACHE_KAFKA_PORT = default_i('VM_APACHE_KAFKA_PORT', 9092)
 
   # Oracle DB Setup File
-  VM_ORACLE_DB_SETUP_FILE = default_s('VM_ORACLE_DB_SETUP_FILE', 'linux*122*.zip')
+  VM_ORACLE_DB_SETUP_FILE = default_s('VM_ORACLE_DB_SETUP_FILE', 'V839960-01.zip')
 
   # Oracle GoldenGate Setup File
   VM_ORACLE_GG_SETUP_FILE = default_s('VM_ORACLE_GG_SETUP_FILE', '*ggs_Linux*.zip')
@@ -95,7 +95,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   # Oracle Database password for SYS, SYSTEM and PDBADMIN accounts
   # If left blank, the password will be generated automatically
-  VM_ORACLE_PWD = default_s('VM_ORACLE_PWD', '')
+  VM_ORACLE_PWD = default_s('VM_ORACLE_PWD', 'admin8888')
 end
 
 # Convenience methods

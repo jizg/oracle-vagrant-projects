@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # VM name
-  VM_NAME = default_s('VM_NAME', 'oracle-12201-vagrant')
+  VM_NAME = default_s('VM_NAME', 'oracle-11201-vagrant')
 
   # Memory for the VM (in MB, 2048 MB = 2 GB)
   VM_MEMORY = default_i('VM_MEMORY', 2048)
@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   VM_ORACLE_BASE = default_s('VM_ORACLE_BASE', '/opt/oracle')
 
   # Oracle home directory
-  VM_ORACLE_HOME = default_s('VM_ORACLE_HOME', '/opt/oracle/product/12.2.0.1/dbhome_1')
+  VM_ORACLE_HOME = default_s('VM_ORACLE_HOME', '/opt/oracle/product/11.2.0.1/dbhome_1')
 
   # Oracle SID
   VM_ORACLE_SID = default_s('VM_ORACLE_SID', 'ORCLCDB')
