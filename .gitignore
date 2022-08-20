@@ -1,4 +1,6 @@
 .vagrant/
 database/
 *.zip
+*.tar
 .DS_Store
+fbo_ggs_Linux*

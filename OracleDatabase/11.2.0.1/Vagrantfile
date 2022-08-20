@@ -100,6 +100,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = BOX_NAME
   config.vm.box_url = "#{BOX_URL}/#{BOX_NAME}.json"
   config.vm.define VM_NAME
+  
+  config.vm.network "private_network", ip: "192.168.100.11", virtualbox__intnet: "oraclevagrant"
 
   # Provider-specific configuration
   config.vm.provider "virtualbox" do |v|
@@ -158,8 +160,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = VM_NAME
 
   # Oracle port forwarding
-  config.vm.network "forwarded_port", guest: VM_LISTENER_PORT, host: VM_LISTENER_PORT
-  config.vm.network "forwarded_port", guest: VM_EM_EXPRESS_PORT, host: VM_EM_EXPRESS_PORT
+  config.vm.network "forwarded_port", guest: VM_LISTENER_PORT, host: VM_LISTENER_PORT + 1
+  config.vm.network "forwarded_port", guest: VM_EM_EXPRESS_PORT, host: VM_EM_EXPRESS_PORT + 1
+  config.vm.network "forwarded_port", guest: 22, host: 2222 + 1, id: "ssh" 
 
   # Provision everything on the first run
   config.vm.provision "shell", path: "scripts/install.sh", env:

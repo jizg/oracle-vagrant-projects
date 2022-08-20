@@ -4,6 +4,8 @@
 # Copyright (c) 1982-2018 Oracle and/or its affiliates. All rights reserved.
 #
 # Since: January, 2018
+# Author: gerald.venzl@oracle.com
+# Description: Creates an Oracle database Vagrant virtual machine.
 # Optional plugins:
 #     vagrant-env (use .env files for configuration)
 #     vagrant-proxyconf (if you don't have direct access to the Internet)
@@ -33,10 +35,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # VM name
-  VM_NAME = default_s('VM_NAME', 'oracle-goldengate-2130-vagrant')
+  VM_NAME = default_s('VM_NAME', 'oracle-11201-goldengate-112-vagrant')
 
-  # Memory for the VM (in MB, 2300 MB is ~2.25 GB)
-  VM_MEMORY = default_i('VM_MEMORY', 2300)
+  # Memory for the VM (in MB, 2048 MB = 2 GB)
+  VM_MEMORY = default_i('VM_MEMORY', 2048)
 
   # VM time zone
   # If not specified, will be set to match host time zone (if possible)
@@ -46,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   VM_ORACLE_BASE = default_s('VM_ORACLE_BASE', '/opt/oracle')
 
   # Oracle home directory
-  VM_ORACLE_HOME = default_s('VM_ORACLE_HOME', '/opt/oracle/product/21c/dbhome_1')
+  VM_ORACLE_HOME = default_s('VM_ORACLE_HOME', '/opt/oracle/product/11.2.0.1/dbhome_1')
 
   # Oracle SID
   VM_ORACLE_SID = default_s('VM_ORACLE_SID', 'ORCLCDB')
@@ -67,33 +69,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # EM Express port
   VM_EM_EXPRESS_PORT = default_i('VM_EM_EXPRESS_PORT', 5500)
 
-  # Java Version
-  VM_JAVA_VERSION = default_s('VM_JAVA_VERSION', '1.8.0')
-
-  # ScaLa Version
-  VM_SCALA_VERSION = default_s('VM_SCALA_VERSION', '2.12')
-  
-  # Apache Kafka Version
-  VM_APACHE_KAFKA_VERSION = default_s('VM_APACHE_KAFKA_VERSION', '2.8.1')
-
-  # Apache Zookeeper port
-  VM_APACHE_ZOOKEEPER_PORT = default_i('VM_APACHE_ZOOKEEPER_PORT', 2181)
-
-  # Apache Kafka port
-  VM_APACHE_KAFKA_PORT = default_i('VM_APACHE_KAFKA_PORT', 9092)
-
-  # Oracle DB Setup File
-  VM_ORACLE_DB_SETUP_FILE = default_s('VM_ORACLE_DB_SETUP_FILE', 'LINUX.X64_213000_db_home.zip')
-
-  # Oracle GoldenGate Setup File
-  VM_ORACLE_GG_SETUP_FILE = default_s('VM_ORACLE_GG_SETUP_FILE', '*fbo_ggs_Linux*.zip')
-
-  # Oracle GoldenGate for BigData Setup File
-  VM_ORACLE_GG_BD_SETUP_FILE = default_s('VM_ORACLE_GG_BD_SETUP_FILE', '*BigData_*.zip')
-  
   # Oracle Database password for SYS, SYSTEM and PDBADMIN accounts
   # If left blank, the password will be generated automatically
-  VM_ORACLE_PWD = default_s('VM_ORACLE_PWD', '')
+  VM_ORACLE_PWD = default_s('VM_ORACLE_PWD', 'admin8888')
 end
 
 # Convenience methods
@@ -122,9 +100,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = BOX_NAME
   config.vm.box_url = "#{BOX_URL}/#{BOX_NAME}.json"
   config.vm.define VM_NAME
-
-  config.vm.network "private_network", ip: "192.168.100.10", virtualbox__intnet: "oraclevagrant"
   
+  config.vm.network "private_network", ip: "192.168.100.13", virtualbox__intnet: "oraclevagrant"
+
   # Provider-specific configuration
   config.vm.provider "virtualbox" do |v|
     v.memory = VM_MEMORY
@@ -182,31 +160,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = VM_NAME
 
   # Oracle port forwarding
-  config.vm.network "forwarded_port", guest: VM_LISTENER_PORT, host: VM_LISTENER_PORT
-  config.vm.network "forwarded_port", guest: VM_EM_EXPRESS_PORT, host: VM_EM_EXPRESS_PORT
-  config.vm.network "forwarded_port", guest: VM_APACHE_KAFKA_PORT, host: VM_APACHE_KAFKA_PORT
-  config.vm.network "forwarded_port", guest: VM_APACHE_ZOOKEEPER_PORT, host: VM_APACHE_ZOOKEEPER_PORT
-  
+  config.vm.network "forwarded_port", guest: VM_LISTENER_PORT, host: VM_LISTENER_PORT + 3
+  config.vm.network "forwarded_port", guest: VM_EM_EXPRESS_PORT, host: VM_EM_EXPRESS_PORT + 3
+  config.vm.network "forwarded_port", guest: 22, host: 2222 + 3, id: "ssh" 
 
   # Provision everything on the first run
   config.vm.provision "shell", path: "scripts/install.sh", env:
     {
-       "SYSTEM_TIMEZONE"          => VM_SYSTEM_TIMEZONE,
-       "ORACLE_BASE"              => VM_ORACLE_BASE,
-       "ORACLE_HOME"              => VM_ORACLE_HOME,
-       "ORACLE_SID"               => VM_ORACLE_SID,
-       "ORACLE_PDB"               => VM_ORACLE_PDB,
-       "ORACLE_CHARACTERSET"      => VM_ORACLE_CHARACTERSET,
-       "ORACLE_EDITION"           => VM_ORACLE_EDITION,
-       "LISTENER_PORT"            => VM_LISTENER_PORT,
-       "EM_EXPRESS_PORT"          => VM_EM_EXPRESS_PORT,
-       "ORACLE_PWD"               => VM_ORACLE_PWD,
-       "JAVA_VERSION"             => VM_JAVA_VERSION,
-       "SCALA_VERSION"            => VM_SCALA_VERSION,
-       "KAFKA_VERSION"            => VM_APACHE_KAFKA_VERSION,
-       "ORACLE_DB_SETUP_FILE"     => VM_ORACLE_DB_SETUP_FILE,
-       "ORACLE_GG_SETUP_FILE"     => VM_ORACLE_GG_SETUP_FILE,
-       "ORACLE_GG_BD_SETUP_FILE"  => VM_ORACLE_GG_BD_SETUP_FILE
+       "SYSTEM_TIMEZONE"     => VM_SYSTEM_TIMEZONE,
+       "ORACLE_BASE"         => VM_ORACLE_BASE,
+       "ORACLE_HOME"         => VM_ORACLE_HOME,
+       "ORACLE_SID"          => VM_ORACLE_SID,
+       "ORACLE_PDB"          => VM_ORACLE_PDB,
+       "ORACLE_CHARACTERSET" => VM_ORACLE_CHARACTERSET,
+       "ORACLE_EDITION"      => VM_ORACLE_EDITION,
+       "LISTENER_PORT"       => VM_LISTENER_PORT,
+       "EM_EXPRESS_PORT"     => VM_EM_EXPRESS_PORT,
+       "ORACLE_PWD"          => VM_ORACLE_PWD
     }
 
 end
