@@ -19,8 +19,8 @@
 VAGRANTFILE_API_VERSION = "2"
 
 # Box metadata location and box name
-BOX_URL = "https://oracle.github.io/vagrant-projects/boxes"
-BOX_NAME = "oraclelinux/7"
+# BOX_URL = "https://oracle.github.io/vagrant-projects/boxes"
+BOX_NAME = "centos/7" #"oraclelinux/7"
 
 # UI object for printing information
 ui = Vagrant::UI::Prefixed.new(Vagrant::UI::Colored.new, "vagrant")
@@ -74,7 +74,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   VM_SCALA_VERSION = default_s('VM_SCALA_VERSION', '2.12')
   
   # Apache Kafka Version
-  VM_APACHE_KAFKA_VERSION = default_s('VM_APACHE_KAFKA_VERSION', '2.8.1')
+  VM_APACHE_KAFKA_VERSION = default_s('VM_APACHE_KAFKA_VERSION', '2.8.2')
 
   # Apache Zookeeper port
   VM_APACHE_ZOOKEEPER_PORT = default_i('VM_APACHE_ZOOKEEPER_PORT', 2181)
@@ -93,7 +93,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   # Oracle Database password for SYS, SYSTEM and PDBADMIN accounts
   # If left blank, the password will be generated automatically
-  VM_ORACLE_PWD = default_s('VM_ORACLE_PWD', '')
+  VM_ORACLE_PWD = default_s('VM_ORACLE_PWD', 'admin8888')
 end
 
 # Convenience methods
@@ -120,7 +120,7 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = BOX_NAME
-  config.vm.box_url = "#{BOX_URL}/#{BOX_NAME}.json"
+  # config.vm.box_url = "#{BOX_URL}/#{BOX_NAME}.json"
   config.vm.define VM_NAME
 
   config.vm.network "private_network", ip: "192.168.100.10", virtualbox__intnet: "oraclevagrant"
@@ -132,6 +132,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.provider :libvirt do |v|
     v.memory = VM_MEMORY
+  end
+  config.vm.provider "hyper-v" do |v|
+    v.maxmemory = VM_MEMORY
+    v.memory = VM_MEMORY
+    config.vm.synced_folder '.', '/vagrant', {
+      type: 'smb', mount_options: ['vers=3.0']
+    }
   end
 
   # add proxy configuration from host env - optional

@@ -25,8 +25,20 @@ echo 'INSTALLER: Locale set'
 sudo timedatectl set-timezone $SYSTEM_TIMEZONE
 echo "INSTALLER: System time zone set to $SYSTEM_TIMEZONE"
 
+# create user and group
+echo 'INSTALLER: create oracle:oinstall'
+sudo groupadd -g 54321 oinstall
+sudo groupadd -g 54322 dba
+sudo groupadd -g 54323 oper
+sudo groupadd -g 54325 dgdba
+sudo groupadd -g 54326 kmdba
+sudo groupadd -g 54330 racdba
+sudo useradd -u 54321 -g oinstall -G oinstall,dba,oper,dgdba,kmdba,racdba oracle
+
 # Install Oracle Database prereq and openssl packages
-yum install -y oracle-database-preinstall-21c openssl
+curl "https://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64/getPackage/oracle-database-preinstall-21c-1.0-1.el7.x86_64.rpm" -# -o /tmp/oracle-database-preinstall-21c-1.0-1.el7.x86_64.rpm
+sudo yum install -y /tmp/oracle-database-preinstall-21c-1.0-1.el7.x86_64.rpm
+sudo yum install -y openssl unzip
 
 echo 'INSTALLER: Oracle preinstall and openssl complete'
 
